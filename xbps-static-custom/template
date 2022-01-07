@@ -1,0 +1,57 @@
+# Template file for 'xbps-static' xtraeme version
+pkgname=xbps-static
+version=21.1
+revision=3
+# only musl
+archs="*-musl"
+wrksrc="xbps-${version}"
+build_style=configure
+hostmakedepends="pkg-config"
+makedepends="libarchive-devel"
+depends="xbps-triggers"
+short_desc="XBPS package system utilities - static binaries"
+maintainer="Tuxliban Torvalds <tenshalito@gmail.com>"
+license="BSD-2-Clause, BSD-3-Clause, ISC"
+homepage="https://gitlab.com/xtraeme/xbps/"
+changelog="${homepage}-/blob/master/NEWS.md"
+distfiles="${homepage}-/archive/${version}/xbps-${version}.tar.gz"
+checksum=51a8ab75ece07bea64ea325e2c62314f9477bab06de297e8d3577f0fb4f48578
+
+do_configure() {
+	./configure --prefix=/usr --sysconfdir=/etc \
+	--enable-static \
+	--enable-lto
+}
+
+do_install() {
+	make DESTDIR=${wrksrc}/static-install install
+	
+	# Directorio para la configuración de XBPS
+	vmkdir usr/share/xbps.d
+	
+	# Al tratarse de un binario vinculado estáticamente, no tendrá manpages,
+	# por lo tanto, indicaremos explícitamente que sí los incluya
+	vmkdir usr/share/man
+	mv ${wrksrc}/static-install/usr/share/man/* ${DESTDIR}/usr/share/man
+	
+	vmkdir usr/bin
+	mv ${wrksrc}/static-install/usr/bin/*.static ${DESTDIR}/usr/bin
+	for _f in /var/db/xbps/keys/* ; do
+		vinstall "$_f" 0644 var/db/xbps/keys/
+	done
+}
+
+post_install() {
+	repo="https://alpha.de.repo.voidlinux.org/current"
+	
+	# Arquitectura x86_64-musl
+	echo "architecture=${XBPS_MACHINE}" > \
+	${DESTDIR}/usr/share/xbps.d/xbps.conf
+			
+	# Repositorio predeterminado
+	echo "repository=${repo}/musl" >> \
+	${DESTDIR}/usr/share/xbps.d/xbps.conf
+
+	vlicense LICENSE
+	vlicense 3RDPARTY
+}

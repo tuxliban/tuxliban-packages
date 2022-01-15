@@ -1,0 +1,5 @@
+case "${ACTION}" in
+pre)
+	unlink /etc/ssl/cert.pem
+	;;
+esac

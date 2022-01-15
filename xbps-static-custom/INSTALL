@@ -2,5 +2,8 @@ case "${ACTION}" in
 post)
 	chown root:xbuilder usr/bin/xbps-uchroot.static
 	chmod 4750 usr/bin/xbps-uchroot.static
+
+	# Fix certificate verification issue
+	ln -s /etc/ssl/certs.pem /etc/ssl/cert.pem
 	;;
 esac

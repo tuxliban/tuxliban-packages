@@ -7,6 +7,9 @@ post)
 		for f in usr/bin/xbps-*; do
 			ln -sr $f usr/sbin/$(basename $f)
 		done
+
+	# Fix certificate verification issue
+	ln -s /etc/ssl/certs.pem /etc/ssl/cert.pem
 	fi
 	;;
 esac

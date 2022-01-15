@@ -1,7 +1,7 @@
 # Template file for 'xbps'
 pkgname=xbps
 version=21.1
-revision=3
+revision=4
 archs="i686 x86_64 x86_64-musl"
 bootstrap=yes
 build_style=configure

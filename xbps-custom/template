@@ -1,7 +1,7 @@
 # Template file for 'xbps'
 pkgname=xbps
 version=21.1
-revision=4
+revision=5
 archs="i686 x86_64 x86_64-musl"
 bootstrap=yes
 build_style=configure
@@ -31,7 +31,7 @@ pre_build() {
 
 post_install() {
 	
-	local repo="https://alpha.de.repo.voidlinux.org/current" suffix=
+	local repo="https://repo-default.voidlinux.org/current" suffix=
 	case "$XBPS_TARGET_MACHINE" in
 		*-musl)       suffix="/musl";;
 	esac
